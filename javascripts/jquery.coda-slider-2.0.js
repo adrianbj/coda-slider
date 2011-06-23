@@ -7,6 +7,7 @@
 var sliderCount = 1;
 var slideTimerId = 0;
 
+(function( $ ){
 $.fn.codaSlider = function(settings) {
 
 	settings = $.extend({
@@ -243,3 +244,4 @@ $.fn.codaSlider = function(settings) {
 		
 	});
 };
+})( jQuery );

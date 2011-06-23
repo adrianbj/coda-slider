@@ -5,6 +5,7 @@
 */
 
 var sliderCount = 1;
+var slideTimerId = 0;
 
 $.fn.codaSlider = function(settings) {
 
@@ -14,6 +15,7 @@ $.fn.codaSlider = function(settings) {
 		autoHeightEaseFunction: "easeInOutExpo",
 		autoSlide: false,
 		autoSlideInterval: 7000,
+		autoSlideHoverPause: true,
 		autoSlideStopWhenClicked: true,
 		crossLinking: true,
 		dynamicArrows: true,
@@ -183,9 +185,17 @@ $.fn.codaSlider = function(settings) {
 		// Trigger autoSlide
 		if (settings.autoSlide) {
 			slider.ready(function() {
-				setTimeout(autoSlide,settings.autoSlideInterval);
+				slideTimerId = setTimeout(autoSlide,settings.autoSlideInterval);
 			});
 		};
+		if (settings.autoSlideHoverPause) {
+			$(".coda-slider").bind("mouseleave", function(e) {
+				slideTimerId = setTimeout(autoSlide,settings.autoSlideInterval);
+			});
+			$(".coda-slider").bind("mouseenter", function(e) {
+				clearTimeout(slideTimerId);
+			});
+		}
 		
 		// Return panel number for specified hash via a cache lookup
 		function getHashPanel(panelHash) {
@@ -225,7 +235,7 @@ $.fn.codaSlider = function(settings) {
 				slider.siblings('.coda-nav').find('a').removeClass('current').parents('ul').find('li:eq(' + (currentPanel - 1) + ') a').addClass('current');
 				// Slide:
 				$('.panel-container', slider).animate({ marginLeft: offset }, settings.slideEaseDuration, settings.slideEaseFunction);
-				setTimeout(autoSlide,settings.autoSlideInterval);
+				slideTimerId = setTimeout(autoSlide,settings.autoSlideInterval);
 			};
 		};
 		
